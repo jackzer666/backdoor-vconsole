@@ -62,49 +62,39 @@ const rapidClicks = ({
 // 长按
 const longPress = ({ target, duration = DEFAULT_CONFIG.DURATION }) => {
   const t = getTarget(target);
-  let longPressInner;
+  let timer;
   if (isMobile()) {
-    longPressInner = () => {
-      return () => {
-        let timer;
-        t.addEventListener("touchstart", () => {
-          timer = setTimeout(() => {
-            startVConsole();
-          }, duration);
-        });
-        t.addEventListener("touchend", () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
-        });
-        t.addEventListener("touchcancel", () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
-        });
-      };
-    };
+    t.addEventListener("touchstart", () => {
+      timer = setTimeout(() => {
+        startVConsole();
+      }, duration);
+    });
+    t.addEventListener("touchend", () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    });
+    t.addEventListener("touchcancel", () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    });
   } else {
-    longPressInner = () => {
-      return () => {
-        let timer;
-        t.addEventListener("mousedown", () => {
-          timer = setTimeout(() => {
-            startVConsole();
-          }, duration);
-        });
-        t.addEventListener("mouseup", () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
-        });
-        t.addEventListener("mouseleave", () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
-        });
-      };
-    };
+    t.addEventListener("mousedown", () => {
+      timer = setTimeout(() => {
+        startVConsole();
+      }, duration);
+    });
+    t.addEventListener("mouseup", () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    });
+    t.addEventListener("mouseleave", () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    });
   }
 };
 
