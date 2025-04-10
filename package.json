@@ -1,6 +1,6 @@
 {
   "name": "backdoor-vconsole",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +12,7 @@
   "author": "jackz3r",
   "license": "MIT",
   "description": "",
-  "devDependencies": {
+  "dependencies": {
     "vconsole": "^3.15.1"
   }
 }
