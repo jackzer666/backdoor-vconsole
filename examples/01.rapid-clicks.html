@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快速点击示例</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { text-align: center; color: #333; }
+    .demo-section {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 { margin-top: 0; color: #666; font-size: 18px; }
+    p { color: #888; font-size: 14px; }
+    button {
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 16px;
+      color: #fff;
+      background: #007aff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #0056cc; }
+    button:active { transform: scale(0.98); }
+    .desc {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>快速点击示例</h1>
+
+  <div class="demo-section">
+    <h2>快速点击</h2>
+    <p>连续点击按钮 7 次，即可唤起 vConsole</p>
+    <button id="rapidBtn">快速点击我 7 次</button>
+    <div class="desc">
+      默认配置：7 次点击 / 300ms 间隔内完成
+    </div>
+  </div>
+
+  <script type="module">
+    import { rapidClicks } from '../index.js';
+
+    rapidClicks({
+      target: '#rapidBtn',
+    });
+  </script>
+</body>
+</html>
