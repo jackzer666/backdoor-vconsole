@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx serve:*)",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(xargs kill:*)",
+      "Bash(npx vite:*)",
+      "Bash(curl -sv http://localhost:5174/01.rapid-clicks.html)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"vite\")"
+    ]
+  }
+}
