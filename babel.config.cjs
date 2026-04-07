@@ -1,7 +1,6 @@
 module.exports = {
   plugins: [
     ['@babel/plugin-transform-runtime', {
-      corejs: 3,
       helpers: true,
       regenerator: true
     }]

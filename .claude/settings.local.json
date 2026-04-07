@@ -8,7 +8,8 @@
       "Bash(npx vite:*)",
       "Bash(curl -sv http://localhost:5174/01.rapid-clicks.html)",
       "Bash(kill %1)",
-      "Bash(pkill -f \"vite\")"
+      "Bash(pkill -f \"vite\")",
+      "Bash(grep -l \"runtime-corejs3\" /Volumes/Project_Disk/future/backdoor-vconsole/dist/*)"
     ]
   }
 }
