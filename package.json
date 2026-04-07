@@ -1,6 +1,6 @@
 {
   "name": "backdoor-vconsole",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0",
   "description": "programmer backdoor trigger incident",
   "homepage": "https://github.com/jackzer666/backdoor-vconsole",
   "license": "MIT",
