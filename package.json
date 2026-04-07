@@ -6,8 +6,8 @@
   "license": "MIT",
   "author": "jackz3r",
   "type": "module",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.cjs.min.js",
+  "module": "dist/index.min.mjs",
   "files": [
     "dist"
   ],
