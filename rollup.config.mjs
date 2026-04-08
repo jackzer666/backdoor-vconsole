@@ -1,19 +1,17 @@
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const babel = (await import('@rollup/plugin-babel')).default;
-const commonjs = (await import('@rollup/plugin-commonjs')).default;
-const nodeResolve = (await import('@rollup/plugin-node-resolve')).default;
+const typescript = (await import('@rollup/plugin-typescript')).default;
 const terser = (await import('@rollup/plugin-terser')).default;
 
 export default {
-  input: "./index.js",
+  input: "./src/index.ts",
   output: [
     // CJS
     {
       file: "dist/index.cjs.js",
       format: "cjs",
       exports: "named",
-      sourcemap: true,
+      sourcemap: false,
     },
     {
       file: "dist/index.cjs.min.js",
@@ -25,7 +23,7 @@ export default {
     {
       file: "dist/index.mjs",
       format: "es",
-      sourcemap: true,
+      sourcemap: false,
     },
     {
       file: "dist/index.min.mjs",
@@ -34,13 +32,12 @@ export default {
     },
   ],
   plugins: [
-    nodeResolve(),
-    commonjs(),
-    babel({
-      babelHelpers: 'runtime',
-      exclude: 'node_modules/**',
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
-    })
+    typescript({
+      tsconfig: "./tsconfig.json",
+      declaration: true,
+      declarationDir: "./dist",
+      noEmit: false,
+    }),
   ],
   external: ["vconsole"],
 };

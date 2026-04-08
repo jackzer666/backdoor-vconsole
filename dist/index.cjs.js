@@ -2,169 +2,99 @@
 
 var VConsole = require('vconsole');
 
-function _arrayWithHoles(r) {
-  if (Array.isArray(r)) return r;
-}
-
-function _iterableToArrayLimit(r, l) {
-  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
-  if (null != t) {
-    var e,
-      n,
-      i,
-      u,
-      a = [],
-      f = true,
-      o = false;
-    try {
-      if (i = (t = t.call(r)).next, 0 === l) ; else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
-    } catch (r) {
-      o = true, n = r;
-    } finally {
-      try {
-        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
-      } finally {
-        if (o) throw n;
-      }
+const DEFAULT_CONFIG = {
+    COUNT: 7,
+    INTERVAL: 300,
+    DURATION: 7 * 1000,
+    CLOSE_COUNT: 10,
+    CLOSE_DURATION: 10 * 1000,
+};
+let vConsoleInstance = null;
+const toggleVConsole = () => {
+    if (vConsoleInstance) {
+        vConsoleInstance.destroy();
+        vConsoleInstance = null;
+        console.log("vConsole is closed");
     }
-    return a;
-  }
-}
-
-function _arrayLikeToArray(r, a) {
-  (null == a || a > r.length) && (a = r.length);
-  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
-  return n;
-}
-
-function _unsupportedIterableToArray(r, a) {
-  if (r) {
-    if ("string" == typeof r) return _arrayLikeToArray(r, a);
-    var t = {}.toString.call(r).slice(8, -1);
-    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
-  }
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(r, e) {
-  return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
-}
-
-var DEFAULT_CONFIG = {
-  COUNT: 7,
-  INTERVAL: 300,
-  DURATION: 7 * 1000,
-  CLOSE_COUNT: 10,
-  CLOSE_DURATION: 10 * 1000
-};
-var vConsoleInstance = null;
-var toggleVConsole = function toggleVConsole() {
-  if (vConsoleInstance) {
-    vConsoleInstance.destroy();
-    vConsoleInstance = null;
-    console.log("vConsole is closed");
-  } else {
-    vConsoleInstance = new VConsole();
-    console.log("vConsole is started", vConsoleInstance);
-  }
-};
-var isMobile = function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-};
-var getTarget = function getTarget(target) {
-  if (typeof target === "string") {
-    var t = document.querySelector(target);
-    if (t) {
-      return t;
-    } else {
-      throw new Error("can not find target");
+    else {
+        vConsoleInstance = new VConsole();
+        console.log("vConsole is started", vConsoleInstance);
     }
-  } else if (target instanceof HTMLElement) {
-    return target;
-  } else {
-    throw new Error("target is required");
-  }
 };
-
-// 快速点击 - 点击 openCount 次开启，点击 closeCount 次关闭
-var rapidClicks = function rapidClicks(_ref) {
-  var target = _ref.target,
-    _ref$openCount = _ref.openCount,
-    openCount = _ref$openCount === void 0 ? DEFAULT_CONFIG.COUNT : _ref$openCount,
-    _ref$closeCount = _ref.closeCount,
-    closeCount = _ref$closeCount === void 0 ? DEFAULT_CONFIG.CLOSE_COUNT : _ref$closeCount,
-    _ref$interval = _ref.interval,
-    interval = _ref$interval === void 0 ? DEFAULT_CONFIG.INTERVAL : _ref$interval;
-  var t = getTarget(target);
-  var clickTimer = null;
-  var clickCount = 0;
-  var handler = function handler() {
-    clearTimeout(clickTimer);
-    clickCount += 1;
-    var threshold = vConsoleInstance ? closeCount : openCount;
-    if (clickCount === threshold) {
-      toggleVConsole();
-      clickCount = 0;
+const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const getTarget = (target) => {
+    if (typeof target === "string") {
+        const t = document.querySelector(target);
+        if (t instanceof HTMLElement) {
+            return t;
+        }
+        else {
+            throw new Error(`can not find target`);
+        }
     }
-    clickTimer = setTimeout(function () {
-      clickCount = 0;
-    }, interval);
-  };
-  t.addEventListener("click", handler);
-  return function () {
-    t.removeEventListener("click", handler);
-    clearTimeout(clickTimer);
-  };
+    else if (target instanceof HTMLElement) {
+        return target;
+    }
+    else {
+        throw new Error("target is required");
+    }
 };
-
-// 长按 - 长按 openDuration 开启，长按 closeDuration 关闭
-var longPress = function longPress(_ref2) {
-  var target = _ref2.target,
-    _ref2$openDuration = _ref2.openDuration,
-    openDuration = _ref2$openDuration === void 0 ? DEFAULT_CONFIG.DURATION : _ref2$openDuration,
-    _ref2$closeDuration = _ref2.closeDuration,
-    closeDuration = _ref2$closeDuration === void 0 ? DEFAULT_CONFIG.CLOSE_DURATION : _ref2$closeDuration;
-  var t = getTarget(target);
-  var timer = null;
-  var onPress = function onPress() {
-    clearTimeout(timer);
-    var duration = vConsoleInstance ? closeDuration : openDuration;
-    timer = setTimeout(toggleVConsole, duration);
-  };
-  var clearTimer = function clearTimer() {
-    clearTimeout(timer);
-    timer = null;
-  };
-  var events = isMobile() ? {
-    touchstart: onPress,
-    touchend: clearTimer,
-    touchcancel: clearTimer
-  } : {
-    mousedown: onPress,
-    mouseup: clearTimer,
-    mouseleave: clearTimer
-  };
-  Object.entries(events).forEach(function (_ref3) {
-    var _ref4 = _slicedToArray(_ref3, 2),
-      event = _ref4[0],
-      handler = _ref4[1];
-    return t.addEventListener(event, handler);
-  });
-  return function () {
-    Object.entries(events).forEach(function (_ref5) {
-      var _ref6 = _slicedToArray(_ref5, 2),
-        event = _ref6[0],
-        handler = _ref6[1];
-      return t.removeEventListener(event, handler);
-    });
-    clearTimer();
-  };
+/**
+ * 快速点击 - 点击 openCount 次开启，点击 closeCount 次关闭
+ */
+const rapidClicks = (options) => {
+    const { target, openCount = DEFAULT_CONFIG.COUNT, closeCount = DEFAULT_CONFIG.CLOSE_COUNT, interval = DEFAULT_CONFIG.INTERVAL } = options;
+    const t = getTarget(target);
+    let clickTimer = null;
+    let clickCount = 0;
+    const handler = () => {
+        if (clickTimer)
+            clearTimeout(clickTimer);
+        clickCount += 1;
+        const threshold = vConsoleInstance ? closeCount : openCount;
+        if (clickCount === threshold) {
+            toggleVConsole();
+            clickCount = 0;
+        }
+        clickTimer = setTimeout(() => {
+            clickCount = 0;
+        }, interval);
+    };
+    t.addEventListener("click", handler);
+    return () => {
+        t.removeEventListener("click", handler);
+        if (clickTimer)
+            clearTimeout(clickTimer);
+    };
+};
+/**
+ * 长按 - 长按 openDuration 开启，长按 closeDuration 关闭
+ */
+const longPress = (options) => {
+    const { target, openDuration = DEFAULT_CONFIG.DURATION, closeDuration = DEFAULT_CONFIG.CLOSE_DURATION } = options;
+    const t = getTarget(target);
+    let timer = null;
+    const onPress = () => {
+        if (timer)
+            clearTimeout(timer);
+        const duration = vConsoleInstance ? closeDuration : openDuration;
+        timer = setTimeout(toggleVConsole, duration);
+    };
+    const clearTimer = () => {
+        if (timer)
+            clearTimeout(timer);
+        timer = null;
+    };
+    const events = isMobile()
+        ? { touchstart: onPress, touchend: clearTimer, touchcancel: clearTimer }
+        : { mousedown: onPress, mouseup: clearTimer, mouseleave: clearTimer };
+    Object.entries(events).forEach(([event, handler]) => t.addEventListener(event, handler));
+    return () => {
+        Object.entries(events).forEach(([event, handler]) => t.removeEventListener(event, handler));
+        clearTimer();
+    };
 };
 
 exports.longPress = longPress;
 exports.rapidClicks = rapidClicks;
 exports.toggleVConsole = toggleVConsole;
-//# sourceMappingURL=index.cjs.js.map
