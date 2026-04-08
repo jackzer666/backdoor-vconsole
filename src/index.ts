@@ -9,9 +9,9 @@ const DEFAULT_CONFIG = {
   CLOSE_DURATION: 10 * 1000,
 };
 
-let vConsoleInstance = null;
+let vConsoleInstance: VConsole | null = null;
 
-const toggleVConsole = () => {
+const toggleVConsole = (): void => {
   if (vConsoleInstance) {
     vConsoleInstance.destroy();
     vConsoleInstance = null;
@@ -22,15 +22,15 @@ const toggleVConsole = () => {
   }
 };
 
-const isMobile = () =>
+const isMobile = (): boolean =>
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
 
-const getTarget = (target) => {
+const getTarget = (target: string | HTMLElement): HTMLElement => {
   if (typeof target === "string") {
     const t = document.querySelector(target);
-    if (t) {
+    if (t instanceof HTMLElement) {
       return t;
     } else {
       throw new Error(`can not find target`);
@@ -42,19 +42,28 @@ const getTarget = (target) => {
   }
 };
 
-// 快速点击 - 点击 openCount 次开启，点击 closeCount 次关闭
-const rapidClicks = ({
-  target,
-  openCount = DEFAULT_CONFIG.COUNT,
-  closeCount = DEFAULT_CONFIG.CLOSE_COUNT,
-  interval = DEFAULT_CONFIG.INTERVAL,
-}) => {
+export interface RapidClicksOptions {
+  /** 选择器或 HTMLElement */
+  target: string | HTMLElement;
+  /** 开启次数，默认 7 */
+  openCount?: number;
+  /** 关闭次数，默认 10 */
+  closeCount?: number;
+  /** 点击间隔，默认 300ms */
+  interval?: number;
+}
+
+/**
+ * 快速点击 - 点击 openCount 次开启，点击 closeCount 次关闭
+ */
+export const rapidClicks = (options: RapidClicksOptions): (() => void) => {
+  const { target, openCount = DEFAULT_CONFIG.COUNT, closeCount = DEFAULT_CONFIG.CLOSE_COUNT, interval = DEFAULT_CONFIG.INTERVAL } = options;
   const t = getTarget(target);
-  let clickTimer = null;
+  let clickTimer: ReturnType<typeof setTimeout> | null = null;
   let clickCount = 0;
 
-  const handler = () => {
-    clearTimeout(clickTimer);
+  const handler = (): void => {
+    if (clickTimer) clearTimeout(clickTimer);
     clickCount += 1;
     const threshold = vConsoleInstance ? closeCount : openCount;
     if (clickCount === threshold) {
@@ -70,27 +79,35 @@ const rapidClicks = ({
 
   return () => {
     t.removeEventListener("click", handler);
-    clearTimeout(clickTimer);
+    if (clickTimer) clearTimeout(clickTimer);
   };
 };
 
-// 长按 - 长按 openDuration 开启，长按 closeDuration 关闭
-const longPress = ({
-  target,
-  openDuration = DEFAULT_CONFIG.DURATION,
-  closeDuration = DEFAULT_CONFIG.CLOSE_DURATION,
-}) => {
-  const t = getTarget(target);
-  let timer = null;
+export interface LongPressOptions {
+  /** 选择器或 HTMLElement */
+  target: string | HTMLElement;
+  /** 开启时长，默认 7000ms */
+  openDuration?: number;
+  /** 关闭时长，默认 10000ms */
+  closeDuration?: number;
+}
 
-  const onPress = () => {
-    clearTimeout(timer);
+/**
+ * 长按 - 长按 openDuration 开启，长按 closeDuration 关闭
+ */
+export const longPress = (options: LongPressOptions): (() => void) => {
+  const { target, openDuration = DEFAULT_CONFIG.DURATION, closeDuration = DEFAULT_CONFIG.CLOSE_DURATION } = options;
+  const t = getTarget(target);
+  let timer: ReturnType<typeof setTimeout> | null = null;
+
+  const onPress = (): void => {
+    if (timer) clearTimeout(timer);
     const duration = vConsoleInstance ? closeDuration : openDuration;
     timer = setTimeout(toggleVConsole, duration);
   };
 
-  const clearTimer = () => {
-    clearTimeout(timer);
+  const clearTimer = (): void => {
+    if (timer) clearTimeout(timer);
     timer = null;
   };
 
@@ -110,4 +127,7 @@ const longPress = ({
   };
 };
 
-export { rapidClicks, longPress, toggleVConsole };
+/**
+ * 手动切换 vConsole 开关状态
+ */
+export { toggleVConsole };
