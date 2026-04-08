@@ -92,6 +92,8 @@ Run examples:
 
 ```bash
 npm run dev:examples
+
+# Visit http://localhost:5173/01.rapid-clicks.html
 ```
 
 ## License

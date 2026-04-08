@@ -92,6 +92,8 @@ toggleVConsole(); // 切换 vConsole 状态
 
 ```bash
 npm run dev:examples
+
+# 访问 http://localhost:5173/01.rapid-clicks.html
 ```
 
 ## 许可证
